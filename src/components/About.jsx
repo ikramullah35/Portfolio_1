@@ -29,7 +29,7 @@ const About = ({ darkMode }) => {
             <div className="w-full h-96 bg-gradient-to-br from-blue-100 to-purple-100 rounded-lg overflow-hidden transform group-hover:scale-105 transition-transform duration-300 shadow-lg hover:shadow-2xl relative">
               {/* Profile Image */}
               <img 
-                src="/src/assets/1.jpg" 
+                src="./1.jpg" 
                 alt="Ikram Ullah - Frontend Developer" 
                 className="w-full h-full object-cover object-center group-hover:scale-110 transition-transform duration-500"
                 onError={(e) => {

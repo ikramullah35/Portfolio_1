@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio Admin Dashboard - Contact Submissions</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .fade-in { animation: fadeIn 0.5s ease-in; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <div class="container mx-auto px-4 py-8">
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h1 class="text-3xl font-bold text-gray-800 mb-2">📊 Portfolio Admin Dashboard</h1>
+            <p class="text-gray-600">View and manage contact form submissions</p>
+        </div>
+
+        <!-- Stats Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <div class="bg-white rounded-lg shadow p-6">
+                <div class="flex items-center">
+                    <div class="p-3 bg-blue-100 rounded-full">
+                        <span class="text-2xl">📧</span>
+                    </div>
+                    <div class="ml-4">
+                        <h3 class="text-lg font-semibold text-gray-700">Total Messages</h3>
+                        <p class="text-2xl font-bold text-blue-600" id="totalCount">-</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bg-white rounded-lg shadow p-6">
+                <div class="flex items-center">
+                    <div class="p-3 bg-green-100 rounded-full">
+                        <span class="text-2xl">📅</span>
+                    </div>
+                    <div class="ml-4">
+                        <h3 class="text-lg font-semibold text-gray-700">Today</h3>
+                        <p class="text-2xl font-bold text-green-600" id="todayCount">-</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bg-white rounded-lg shadow p-6">
+                <div class="flex items-center">
+                    <div class="p-3 bg-purple-100 rounded-full">
+                        <span class="text-2xl">⏰</span>
+                    </div>
+                    <div class="ml-4">
+                        <h3 class="text-lg font-semibold text-gray-700">Latest</h3>
+                        <p class="text-lg font-bold text-purple-600" id="latestTime">-</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Controls -->
+        <div class="bg-white rounded-lg shadow p-6 mb-6">
+            <div class="flex flex-wrap gap-4 items-center justify-between">
+                <div class="flex gap-2">
+                    <button onclick="loadContacts()" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
+                        🔄 Refresh
+                    </button>
+                    <button onclick="exportContacts()" class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors">
+                        📥 Export CSV
+                    </button>
+                </div>
+                <div class="text-sm text-gray-500" id="lastUpdated">
+                    Last updated: Never
+                </div>
+            </div>
+        </div>
+
+        <!-- Loading State -->
+        <div id="loading" class="text-center py-8 hidden">
+            <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
+            <p class="mt-4 text-gray-600">Loading contact submissions...</p>
+        </div>
+
+        <!-- Error State -->
+        <div id="error" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg mb-6 hidden">
+            <div class="flex items-center">
+                <span class="text-xl mr-2">❌</span>
+                <div>
+                    <strong>Error:</strong> <span id="errorMessage"></span>
+                    <br>
+                    <small>Make sure your backend server is running on http://localhost:5000</small>
+                </div>
+            </div>
+        </div>
+
+        <!-- Contacts List -->
+        <div id="contactsList" class="space-y-4">
+            <!-- Contacts will be loaded here -->
+        </div>
+
+        <!-- Empty State -->
+        <div id="emptyState" class="text-center py-12 hidden">
+            <span class="text-6xl mb-4 block">📭</span>
+            <h3 class="text-xl font-semibold text-gray-700 mb-2">No Contact Submissions Yet</h3>
+            <p class="text-gray-500">Contact submissions will appear here when users fill out your portfolio contact form.</p>
+        </div>
+    </div>
+
+    <script>
+        let contacts = [];
+
+        async function loadContacts() {
+            const loading = document.getElementById('loading');
+            const error = document.getElementById('error');
+            const contactsList = document.getElementById('contactsList');
+            const emptyState = document.getElementById('emptyState');
+
+            // Show loading
+            loading.classList.remove('hidden');
+            error.classList.add('hidden');
+            contactsList.innerHTML = '';
+            emptyState.classList.add('hidden');
+
+            try {
+                const response = await fetch('http://localhost:5000/api/contacts');
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+
+                const result = await response.json();
+                contacts = result.data || [];
+
+                // Hide loading
+                loading.classList.add('hidden');
+
+                if (contacts.length === 0) {
+                    emptyState.classList.remove('hidden');
+                } else {
+                    displayContacts(contacts);
+                    updateStats(contacts);
+                }
+
+                // Update last updated time
+                document.getElementById('lastUpdated').textContent = 
+                    `Last updated: ${new Date().toLocaleTimeString()}`;
+
+            } catch (err) {
+                loading.classList.add('hidden');
+                error.classList.remove('hidden');
+                document.getElementById('errorMessage').textContent = err.message;
+                console.error('Error loading contacts:', err);
+            }
+        }
+
+        function displayContacts(contactsToShow) {
+            const contactsList = document.getElementById('contactsList');
+            
+            contactsList.innerHTML = contactsToShow.map((contact, index) => `
+                <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 fade-in" style="animation-delay: ${index * 0.1}s">
+                    <div class="flex justify-between items-start mb-4">
+                        <div class="flex-1">
+                            <h3 class="text-lg font-semibold text-gray-800">${escapeHtml(contact.name)}</h3>
+                            <p class="text-blue-600 text-sm">${escapeHtml(contact.email)}</p>
+                        </div>
+                        <div class="text-right text-sm text-gray-500">
+                            <p>${new Date(contact.submittedAt).toLocaleDateString()}</p>
+                            <p>${new Date(contact.submittedAt).toLocaleTimeString()}</p>
+                        </div>
+                    </div>
+                    
+                    ${contact.subject ? `
+                        <div class="mb-3">
+                            <strong class="text-gray-700">Subject:</strong>
+                            <p class="text-gray-600">${escapeHtml(contact.subject)}</p>
+                        </div>
+                    ` : ''}
+                    
+                    <div class="mb-4">
+                        <strong class="text-gray-700">Message:</strong>
+                        <p class="text-gray-600 mt-1 leading-relaxed">${escapeHtml(contact.message)}</p>
+                    </div>
+                    
+                    <div class="flex flex-wrap gap-4 text-xs text-gray-500">
+                        ${contact.ipAddress ? `<span>🌐 IP: ${contact.ipAddress}</span>` : ''}
+                        <span>🆔 ID: ${contact._id}</span>
+                    </div>
+                    
+                    <div class="mt-4 flex gap-2">
+                        <button onclick="replyToContact('${contact.email}', '${escapeHtml(contact.name)}')" 
+                                class="bg-blue-600 text-white px-3 py-1 rounded text-sm hover:bg-blue-700 transition-colors">
+                            📧 Reply
+                        </button>
+                        <button onclick="deleteContact('${contact._id}')" 
+                                class="bg-red-600 text-white px-3 py-1 rounded text-sm hover:bg-red-700 transition-colors">
+                            🗑️ Delete
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function updateStats(contacts) {
+            const totalCount = contacts.length;
+            const today = new Date().toDateString();
+            const todayCount = contacts.filter(c => 
+                new Date(c.submittedAt).toDateString() === today
+            ).length;
+            
+            const latest = contacts.length > 0 ? contacts[0] : null;
+            const latestTime = latest ? 
+                new Date(latest.submittedAt).toLocaleTimeString() : '-';
+
+            document.getElementById('totalCount').textContent = totalCount;
+            document.getElementById('todayCount').textContent = todayCount;
+            document.getElementById('latestTime').textContent = latestTime;
+        }
+
+        function replyToContact(email, name) {
+            const subject = encodeURIComponent(`Re: Your message to Ikram Ullah`);
+            const body = encodeURIComponent(`Hi ${name},\n\nThank you for contacting me through my portfolio. \n\nBest regards,\nIkram Ullah`);
+            window.open(`mailto:${email}?subject=${subject}&body=${body}`, '_blank');
+        }
+
+        async function deleteContact(id) {
+            if (!confirm('Are you sure you want to delete this contact submission?')) {
+                return;
+            }
+
+            try {
+                const response = await fetch(`http://localhost:5000/api/contacts/${id}`, {
+                    method: 'DELETE'
+                });
+
+                if (response.ok) {
+                    loadContacts(); // Reload the list
+                    alert('✅ Contact deleted successfully');
+                } else {
+                    throw new Error('Failed to delete contact');
+                }
+            } catch (err) {
+                alert('❌ Error deleting contact: ' + err.message);
+            }
+        }
+
+        function exportContacts() {
+            if (contacts.length === 0) {
+                alert('No contacts to export');
+                return;
+            }
+
+            const csv = [
+                ['Name', 'Email', 'Subject', 'Message', 'Date', 'IP Address'],
+                ...contacts.map(contact => [
+                    contact.name,
+                    contact.email,
+                    contact.subject || '',
+                    contact.message,
+                    new Date(contact.submittedAt).toLocaleString(),
+                    contact.ipAddress || ''
+                ])
+            ].map(row => row.map(field => `"${field.replace(/"/g, '""')}"`).join(',')).join('\n');
+
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `portfolio-contacts-${new Date().toISOString().split('T')[0]}.csv`;
+            a.click();
+            window.URL.revokeObjectURL(url);
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Auto-refresh every 30 seconds
+        setInterval(loadContacts, 30000);
+
+        // Load contacts on page load
+        window.addEventListener('load', loadContacts);
+    </script>
+</body>
+</html>

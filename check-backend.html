@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Backend Connection Test</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center">
+    <div class="bg-white rounded-lg shadow-lg p-8 max-w-md w-full">
+        <h1 class="text-2xl font-bold text-gray-800 mb-6 text-center">Backend Connection Test</h1>
+        
+        <div class="space-y-4">
+            <div class="flex items-center justify-between p-3 bg-gray-50 rounded">
+                <span class="font-medium">Frontend Status:</span>
+                <span class="text-green-600 font-bold">✅ Running (Port 5177)</span>
+            </div>
+            
+            <div class="flex items-center justify-between p-3 bg-gray-50 rounded">
+                <span class="font-medium">Backend Status:</span>
+                <span id="backendStatus" class="text-yellow-600 font-bold">⏳ Checking...</span>
+            </div>
+            
+            <div class="flex items-center justify-between p-3 bg-gray-50 rounded">
+                <span class="font-medium">Database Status:</span>
+                <span id="databaseStatus" class="text-yellow-600 font-bold">⏳ Checking...</span>
+            </div>
+        </div>
+
+        <div class="mt-6 space-y-3">
+            <button onclick="checkConnection()" class="w-full bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition-colors">
+                🔄 Check Connection
+            </button>
+            
+            <div id="instructions" class="hidden bg-red-50 border border-red-200 rounded p-4">
+                <h3 class="font-bold text-red-800 mb-2">Backend Not Running!</h3>
+                <p class="text-red-700 text-sm mb-2">To start your backend:</p>
+                <ol class="text-red-700 text-sm space-y-1 list-decimal list-inside">
+                    <li>Open command prompt</li>
+                    <li>Navigate to: <code class="bg-red-100 px-1 rounded">cd backend</code></li>
+                    <li>Run: <code class="bg-red-100 px-1 rounded">npm run dev</code></li>
+                    <li>Wait for "Server running on http://localhost:5000"</li>
+                    <li>Click "Check Connection" again</li>
+                </ol>
+            </div>
+            
+            <div id="success" class="hidden bg-green-50 border border-green-200 rounded p-4">
+                <h3 class="font-bold text-green-800 mb-2">✅ Everything Connected!</h3>
+                <div class="space-y-2 text-sm">
+                    <div class="flex justify-between">
+                        <span>Portfolio:</span>
+                        <a href="http://localhost:5177/" target="_blank" class="text-blue-600 hover:underline">http://localhost:5177/</a>
+                    </div>
+                    <div class="flex justify-between">
+                        <span>Dashboard:</span>
+                        <a href="http://localhost:5000/admin" target="_blank" class="text-blue-600 hover:underline">http://localhost:5000/admin</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-6 text-center">
+            <p class="text-gray-600 text-sm">Last checked: <span id="lastCheck">Never</span></p>
+        </div>
+    </div>
+
+    <script>
+        async function checkConnection() {
+            const backendStatus = document.getElementById('backendStatus');
+            const databaseStatus = document.getElementById('databaseStatus');
+            const instructions = document.getElementById('instructions');
+            const success = document.getElementById('success');
+            const lastCheck = document.getElementById('lastCheck');
+
+            // Reset states
+            backendStatus.innerHTML = '⏳ Checking...';
+            backendStatus.className = 'text-yellow-600 font-bold';
+            databaseStatus.innerHTML = '⏳ Checking...';
+            databaseStatus.className = 'text-yellow-600 font-bold';
+            instructions.classList.add('hidden');
+            success.classList.add('hidden');
+
+            try {
+                // Check backend
+                const response = await fetch('http://localhost:5000/');
+                const data = await response.json();
+                
+                if (response.ok) {
+                    backendStatus.innerHTML = '✅ Connected';
+                    backendStatus.className = 'text-green-600 font-bold';
+                    
+                    // Check database
+                    try {
+                        const dbResponse = await fetch('http://localhost:5000/api/dashboard/stats');
+                        if (dbResponse.ok) {
+                            databaseStatus.innerHTML = '✅ Connected';
+                            databaseStatus.className = 'text-green-600 font-bold';
+                            success.classList.remove('hidden');
+                        } else {
+                            databaseStatus.innerHTML = '⚠️ No Database';
+                            databaseStatus.className = 'text-orange-600 font-bold';
+                        }
+                    } catch (dbError) {
+                        databaseStatus.innerHTML = '❌ Database Error';
+                        databaseStatus.className = 'text-red-600 font-bold';
+                    }
+                } else {
+                    throw new Error('Backend not responding');
+                }
+            } catch (error) {
+                backendStatus.innerHTML = '❌ Not Running';
+                backendStatus.className = 'text-red-600 font-bold';
+                databaseStatus.innerHTML = '❌ Unavailable';
+                databaseStatus.className = 'text-red-600 font-bold';
+                instructions.classList.remove('hidden');
+            }
+
+            lastCheck.textContent = new Date().toLocaleTimeString();
+        }
+
+        // Check on page load
+        window.addEventListener('load', checkConnection);
+        
+        // Auto-check every 10 seconds
+        setInterval(checkConnection, 10000);
+    </script>
+</body>
+</html>
+

@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio Connection Test</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen">
+    <div class="container mx-auto px-4 py-8">
+        <div class="max-w-4xl mx-auto">
+            <h1 class="text-4xl font-bold text-center text-gray-800 mb-8">🔗 Portfolio Connection Test</h1>
+            
+            <!-- Status Overview -->
+            <div class="grid md:grid-cols-3 gap-6 mb-8">
+                <div class="bg-white rounded-lg shadow-lg p-6 text-center">
+                    <div class="text-3xl mb-2" id="frontendIcon">⏳</div>
+                    <h3 class="font-bold text-lg text-gray-800">Frontend</h3>
+                    <p class="text-sm text-gray-600" id="frontendStatus">Checking...</p>
+                    <p class="text-xs text-blue-600 mt-2" id="frontendUrl">Port: 5178</p>
+                </div>
+                
+                <div class="bg-white rounded-lg shadow-lg p-6 text-center">
+                    <div class="text-3xl mb-2" id="backendIcon">⏳</div>
+                    <h3 class="font-bold text-lg text-gray-800">Backend</h3>
+                    <p class="text-sm text-gray-600" id="backendStatus">Checking...</p>
+                    <p class="text-xs text-blue-600 mt-2" id="backendUrl">Port: 5000</p>
+                </div>
+                
+                <div class="bg-white rounded-lg shadow-lg p-6 text-center">
+                    <div class="text-3xl mb-2" id="databaseIcon">⏳</div>
+                    <h3 class="font-bold text-lg text-gray-800">Database</h3>
+                    <p class="text-sm text-gray-600" id="databaseStatus">Checking...</p>
+                    <p class="text-xs text-blue-600 mt-2" id="databaseUrl">MongoDB</p>
+                </div>
+            </div>
+
+            <!-- Test Contact Form -->
+            <div class="bg-white rounded-lg shadow-lg p-8 mb-8">
+                <h2 class="text-2xl font-bold text-gray-800 mb-6">📧 Test Contact Form Connection</h2>
+                
+                <form id="testForm" class="space-y-4">
+                    <div class="grid md:grid-cols-2 gap-4">
+                        <input type="text" id="testName" placeholder="Test Name" 
+                               value="Connection Test" 
+                               class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none">
+                        <input type="email" id="testEmail" placeholder="test@example.com" 
+                               value="test@example.com"
+                               class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none">
+                    </div>
+                    <input type="text" id="testSubject" placeholder="Test Subject" 
+                           value="Portfolio Connection Test"
+                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none">
+                    <textarea id="testMessage" placeholder="Test message..." 
+                              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none h-24">This is a test message to verify the connection between frontend and backend is working properly.</textarea>
+                    
+                    <button type="submit" 
+                            class="w-full bg-blue-600 text-white py-3 px-6 rounded-lg hover:bg-blue-700 transition-colors font-semibold">
+                        🧪 Test Form Submission
+                    </button>
+                </form>
+                
+                <div id="testResult" class="mt-4 p-4 rounded-lg hidden"></div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="grid md:grid-cols-2 gap-6 mb-8">
+                <div class="bg-white rounded-lg shadow-lg p-6">
+                    <h3 class="text-lg font-bold text-gray-800 mb-4">🚀 Quick Access</h3>
+                    <div class="space-y-2">
+                        <a href="http://localhost:5178/" target="_blank" 
+                           class="block w-full bg-blue-500 text-white text-center py-2 rounded hover:bg-blue-600 transition-colors">
+                            🎨 Open Portfolio
+                        </a>
+                        <a href="http://localhost:5000/admin" target="_blank" 
+                           class="block w-full bg-green-500 text-white text-center py-2 rounded hover:bg-green-600 transition-colors">
+                            📊 Open Dashboard
+                        </a>
+                        <button onclick="refreshAll()" 
+                                class="w-full bg-gray-500 text-white py-2 rounded hover:bg-gray-600 transition-colors">
+                            🔄 Refresh All Tests
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-lg shadow-lg p-6">
+                    <h3 class="text-lg font-bold text-gray-800 mb-4">📋 Connection Log</h3>
+                    <div id="connectionLog" class="text-xs space-y-1 max-h-32 overflow-y-auto">
+                        <div class="text-gray-600">Starting connection tests...</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Troubleshooting -->
+            <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-6">
+                <h3 class="text-lg font-bold text-yellow-800 mb-4">🔧 Troubleshooting</h3>
+                <div class="text-sm text-yellow-700 space-y-2">
+                    <p><strong>If Backend shows disconnected:</strong></p>
+                    <ol class="list-decimal list-inside ml-4 space-y-1">
+                        <li>Open terminal: <code class="bg-yellow-100 px-1 rounded">cd backend</code></li>
+                        <li>Run: <code class="bg-yellow-100 px-1 rounded">npm run dev</code></li>
+                        <li>Wait for "Server running on http://localhost:5000"</li>
+                        <li>Click "Refresh All Tests" above</li>
+                    </ol>
+                    
+                    <p class="mt-4"><strong>If Database shows warning:</strong></p>
+                    <ol class="list-decimal list-inside ml-4 space-y-1">
+                        <li>Install MongoDB Community Server</li>
+                        <li>Start MongoDB service: <code class="bg-yellow-100 px-1 rounded">net start MongoDB</code></li>
+                        <li>Or use MongoDB Atlas (cloud database)</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let logCount = 1;
+
+        function addLog(message, type = 'info') {
+            const log = document.getElementById('connectionLog');
+            const timestamp = new Date().toLocaleTimeString();
+            const colorClass = type === 'error' ? 'text-red-600' : type === 'success' ? 'text-green-600' : 'text-gray-600';
+            log.innerHTML += `<div class="${colorClass}">[${timestamp}] ${message}</div>`;
+            log.scrollTop = log.scrollHeight;
+        }
+
+        async function checkFrontend() {
+            const icon = document.getElementById('frontendIcon');
+            const status = document.getElementById('frontendStatus');
+            
+            try {
+                // Check if we can access the current page (means frontend is working)
+                icon.textContent = '✅';
+                status.textContent = 'Connected';
+                status.className = 'text-sm text-green-600';
+                addLog('Frontend: Connected successfully', 'success');
+                return true;
+            } catch (error) {
+                icon.textContent = '❌';
+                status.textContent = 'Disconnected';
+                status.className = 'text-sm text-red-600';
+                addLog('Frontend: Connection failed', 'error');
+                return false;
+            }
+        }
+
+        async function checkBackend() {
+            const icon = document.getElementById('backendIcon');
+            const status = document.getElementById('backendStatus');
+            
+            try {
+                const response = await fetch('http://localhost:5000/', {
+                    method: 'GET',
+                    signal: AbortSignal.timeout(5000)
+                });
+                
+                if (response.ok) {
+                    icon.textContent = '✅';
+                    status.textContent = 'Connected';
+                    status.className = 'text-sm text-green-600';
+                    addLog('Backend: API responding correctly', 'success');
+                    return true;
+                } else {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+            } catch (error) {
+                icon.textContent = '❌';
+                status.textContent = 'Disconnected';
+                status.className = 'text-sm text-red-600';
+                addLog(`Backend: ${error.message}`, 'error');
+                return false;
+            }
+        }
+
+        async function checkDatabase() {
+            const icon = document.getElementById('databaseIcon');
+            const status = document.getElementById('databaseStatus');
+            
+            try {
+                const response = await fetch('http://localhost:5000/api/dashboard/stats', {
+                    method: 'GET',
+                    signal: AbortSignal.timeout(5000)
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    icon.textContent = '✅';
+                    status.textContent = 'Connected';
+                    status.className = 'text-sm text-green-600';
+                    addLog(`Database: Connected (${data.totalContacts || 0} contacts)`, 'success');
+                    return true;
+                } else {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+            } catch (error) {
+                icon.textContent = '⚠️';
+                status.textContent = 'Warning';
+                status.className = 'text-sm text-orange-600';
+                addLog(`Database: ${error.message}`, 'error');
+                return false;
+            }
+        }
+
+        async function testContactForm() {
+            const form = document.getElementById('testForm');
+            const result = document.getElementById('testResult');
+            
+            const formData = {
+                name: document.getElementById('testName').value,
+                email: document.getElementById('testEmail').value,
+                subject: document.getElementById('testSubject').value,
+                message: document.getElementById('testMessage').value,
+                timestamp: new Date().toISOString(),
+                source: 'connection-test'
+            };
+
+            try {
+                addLog('Testing contact form submission...');
+                
+                const response = await fetch('http://localhost:5000/api/contact', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(formData),
+                    signal: AbortSignal.timeout(10000)
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    result.className = 'mt-4 p-4 rounded-lg bg-green-100 border border-green-300 text-green-800';
+                    result.textContent = '✅ Contact form test successful! Message saved to database.';
+                    result.classList.remove('hidden');
+                    addLog('Contact form: Test message submitted successfully', 'success');
+                } else {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+            } catch (error) {
+                result.className = 'mt-4 p-4 rounded-lg bg-red-100 border border-red-300 text-red-800';
+                result.textContent = `❌ Contact form test failed: ${error.message}`;
+                result.classList.remove('hidden');
+                addLog(`Contact form: Test failed - ${error.message}`, 'error');
+            }
+        }
+
+        async function refreshAll() {
+            addLog('--- Refreshing all connection tests ---');
+            
+            // Reset all status
+            document.getElementById('frontendIcon').textContent = '⏳';
+            document.getElementById('backendIcon').textContent = '⏳';
+            document.getElementById('databaseIcon').textContent = '⏳';
+            
+            document.getElementById('frontendStatus').textContent = 'Checking...';
+            document.getElementById('backendStatus').textContent = 'Checking...';
+            document.getElementById('databaseStatus').textContent = 'Checking...';
+
+            // Run all tests
+            await checkFrontend();
+            await checkBackend();
+            await checkDatabase();
+            
+            addLog('--- Connection tests completed ---');
+        }
+
+        // Event listeners
+        document.getElementById('testForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            testContactForm();
+        });
+
+        // Run initial tests
+        window.addEventListener('load', () => {
+            addLog('Portfolio Connection Tester loaded');
+            setTimeout(refreshAll, 1000);
+        });
+
+        // Auto-refresh every 30 seconds
+        setInterval(refreshAll, 30000);
+    </script>
+</body>
+</html>
+

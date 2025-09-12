@@ -58,7 +58,7 @@ const Hero = ({ darkMode, typedText, scrollToSection }) => {
                 <div className="w-full h-full rounded-full bg-gradient-to-br from-blue-600 to-purple-700 flex items-center justify-center text-white text-2xl font-bold overflow-hidden">
                   {/* Profile Image Placeholder - You can replace this with actual image */}
                   <img 
-                    src="/src/assets/2.jpg" 
+                    src="./2.jpg" 
                     alt="Ikram Ullah - Frontend Developer" 
                     className="w-full h-full object-cover rounded-full hover:scale-110 transition-transform duration-300"
                     onError={(e) => {
@@ -117,7 +117,7 @@ const Hero = ({ darkMode, typedText, scrollToSection }) => {
             }`}>
               I'm a{' '}
               <span className="text-blue-600 font-semibold border-r-2 border-blue-600 animate-pulse bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                fronted devlper
+                fronted developer
               </span>
             </p>
             <p className={`text-lg md:text-xl max-w-3xl mx-auto transition-colors duration-300 ${

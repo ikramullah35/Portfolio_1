@@ -26,8 +26,8 @@ const Footer = ({ darkMode }) => {
           <div className="md:col-span-2">
             <h3 className="text-2xl font-bold text-white mb-4">ikram ullah</h3>
             <p className="text-gray-400 mb-6 max-w-md leading-relaxed">
-              Full Stack Developer passionate about creating innovative web solutions 
-              that make a difference. Let's build something amazing together.
+              Frontend Developer passionate about creating beautiful, responsive web applications 
+              that provide exceptional user experiences. Let's build something amazing together.
             </p>
             <div className="flex space-x-4">
               {socialLinks.map((social, index) => (
@@ -69,7 +69,7 @@ const Footer = ({ darkMode }) => {
               <div className="flex items-center space-x-3">
                 <span className="text-blue-400">📧</span>
                 <a 
-                  href="mailto:john.doe@example.com"
+                  href="mailto:ikramulllah35000@gmail.com"
                   className="text-gray-400 hover:text-white transition-colors duration-300"
                 >
                   ikramulllah35000@gmail.com
