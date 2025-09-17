@@ -1,163 +1,60 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React from 'react'
 
-const About = ({ darkMode }) => {
-  const [isVisible, setIsVisible] = useState(false)
-  const aboutRef = useRef(null)
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setIsVisible(true)
-          }
-        })
-      },
-      { threshold: 0.2 }
-    )
-
-    if (aboutRef.current) {
-      observer.observe(aboutRef.current)
-    }
-
-    return () => {
-      if (aboutRef.current) {
-        observer.unobserve(aboutRef.current)
-      }
-    }
-  }, [])
-  const techStacks = [
-    { category: 'Frontend', techs: 'React, JavaScript, HTML/CSS', icon: '🎨' },
-    { category: 'Styling', techs: 'Tailwind CSS, SCSS, Bootstrap', icon: '💅' },
-    { category: 'Tools', techs: 'Vite, Git, VS Code', icon: '🛠️' },
-    { category: 'Design', techs: 'Figma, UI/UX, Responsive', icon: '🎯' }
-  ]
-
+const About = () => {
   return (
-    <section 
-      ref={aboutRef}
-      id="about" 
-      className={`py-20 transition-colors duration-300 ${darkMode ? 'bg-gray-800' : 'bg-white'}`}
-    >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className={`text-center mb-16 transform transition-all duration-1000 ${
-          isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'
-        }`}>
-          <h2 className={`text-3xl md:text-4xl font-bold mb-4 transition-colors duration-300 ${
-            darkMode ? 'text-white' : 'text-gray-800'
-          }`}>
+    <section id="about" className="py-12 bg-gradient-to-br from-white to-gray-50">
+      <div className="max-w-4xl mx-auto px-6">
+        <div className="text-center mb-8">
+          <h2 className="text-2xl md:text-3xl font-bold mb-3 text-gray-800">
             About Me
           </h2>
-          <p className={`max-w-2xl mx-auto transition-colors duration-300 ${
-            darkMode ? 'text-gray-300' : 'text-gray-600'
-          }`}>
-            Learn more about my background, experience, and what drives my passion for development
+          <p className="text-gray-600">
+            Frontend developer passionate about creating beautiful web experiences
           </p>
         </div>
         
-        <div className={`grid md:grid-cols-2 gap-12 items-center transform transition-all duration-1000 delay-300 ${
-          isVisible ? 'translate-x-0 opacity-100' : 'translate-x-10 opacity-0'
-        }`}>
-          <div className="group">
-            <div className="w-full h-96 bg-gradient-to-br from-blue-100 to-purple-100 rounded-lg overflow-hidden transform group-hover:scale-105 transition-transform duration-300 shadow-lg hover:shadow-2xl relative">
-              {/* Profile Image */}
-              <img 
-                src="./1.jpg" 
-                alt="Ikram Ullah - Frontend Developer" 
-                className="w-full h-full object-cover object-center group-hover:scale-110 transition-transform duration-500"
-                onError={(e) => {
-                  e.target.style.display = 'none'
-                  e.target.nextSibling.style.display = 'flex'
-                }}
-              />
-              
-              {/* Fallback with Professional Avatar */}
-              <div className="hidden w-full h-full bg-gradient-to-br from-blue-500 to-purple-600 items-center justify-center flex-col text-white">
-                <div className="w-32 h-32 bg-white/20 rounded-full flex items-center justify-center mb-4 backdrop-blur-sm">
-                  <svg className="w-16 h-16 text-white" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
-                  </svg>
-                </div>
-                <h3 className="text-2xl font-bold text-center">Ikram Ullah</h3>
-                <p className="text-white/80 text-center mt-2">Frontend Developer</p>
-              </div>
-              
-              {/* Overlay on hover */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end">
-                <div className="p-6 text-white">
-                  <h3 className="text-xl font-bold">Ikram Ullah</h3>
-                  <p className="text-white/90">Frontend Developer</p>
-                </div>
-              </div>
-            </div>
+        <div className="grid md:grid-cols-2 gap-8 items-center">
+          <div className="relative">
+            <div className="absolute inset-0 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl transform rotate-3"></div>
+            <img 
+              src="./1.jpg" 
+              alt="Ikram Ullah - Frontend Developer" 
+              className="relative w-full h-64 object-cover rounded-xl shadow-xl"
+            />
           </div>
           
-          <div className="space-y-6">
-            <h3 className={`text-2xl font-bold mb-6 transition-colors duration-300 ${
-              darkMode ? 'text-white' : 'text-gray-800'
-            }`}>
-              Passionate Frontend Developer & UI/UX Enthusiast
+          <div className="space-y-4">
+            <h3 className="text-xl font-bold text-gray-800">
+              Frontend Developer
             </h3>
             
-            <p className={`leading-relaxed transition-colors duration-300 ${
-              darkMode ? 'text-gray-300' : 'text-gray-600'
-            }`}>
-              Hi, I'm Ikram Ullah, a dedicated frontend developer specializing in creating stunning, 
-              user-friendly web applications. I have a passion for transforming creative designs into 
-              interactive digital experiences using modern technologies like React, JavaScript, and CSS.
+            <p className="leading-relaxed text-gray-600">
+              Hi, I'm Ikram Ullah, a dedicated frontend developer specializing in creating 
+              stunning, user-friendly web applications using React, JavaScript, and modern CSS.
             </p>
             
-            <p className={`leading-relaxed transition-colors duration-300 ${
-              darkMode ? 'text-gray-300' : 'text-gray-600'
-            }`}>
-              I love crafting pixel-perfect interfaces and ensuring seamless user experiences across all devices. 
-              When I'm not coding, you'll find me exploring the latest web technologies, contributing to 
-              open-source projects, and constantly learning new skills to stay ahead in this ever-evolving field.
+            <p className="leading-relaxed text-gray-600">
+              I love crafting pixel-perfect interfaces and ensuring seamless user experiences 
+              across all devices. Always learning and exploring new technologies.
             </p>
             
-            <div className="grid grid-cols-2 gap-4 mt-8">
-              {techStacks.map((stack, index) => (
-                <div 
-                  key={index}
-                  className={`p-4 rounded-lg transition-all duration-300 hover:scale-105 hover:shadow-lg ${
-                    darkMode ? 'bg-gray-700 hover:bg-gray-600' : 'bg-gray-50 hover:bg-gray-100'
-                  }`}
-                >
-                  <div className="flex items-center space-x-2 mb-2">
-                    <span className="text-xl">{stack.icon}</span>
-                    <h4 className={`font-semibold transition-colors duration-300 ${
-                      darkMode ? 'text-white' : 'text-gray-800'
-                    }`}>
-                      {stack.category}
-                    </h4>
-                  </div>
-                  <p className={`text-sm transition-colors duration-300 ${
-                    darkMode ? 'text-gray-300' : 'text-gray-600'
-                  }`}>
-                    {stack.techs}
-                  </p>
-                </div>
-              ))}
-            </div>
-            
-            {/* Stats */}
-            <div className="grid grid-cols-3 gap-4 mt-8">
-              {[
-                { number: '25+', label: 'Projects' },
-                { number: '2+', label: 'Years Exp' },
-                { number: '100%', label: 'Commitment' }
-              ].map((stat, index) => (
-                <div key={index} className="text-center">
-                  <div className="text-2xl md:text-3xl font-bold text-blue-600 mb-1">
-                    {stat.number}
-                  </div>
-                  <div className={`text-sm transition-colors duration-300 ${
-                    darkMode ? 'text-gray-400' : 'text-gray-600'
-                  }`}>
-                    {stat.label}
-                  </div>
-                </div>
-              ))}
+            <div className="grid grid-cols-2 gap-3 mt-4">
+              <div className="p-3 bg-white rounded-lg shadow-sm border border-gray-100">
+                <h4 className="font-semibold text-gray-800 mb-1 text-sm">Frontend</h4>
+                <p className="text-xs text-gray-600">React, JavaScript</p>
+              </div>
+              <div className="p-3 bg-white rounded-lg shadow-sm border border-gray-100">
+                <h4 className="font-semibold text-gray-800 mb-1 text-sm">Styling</h4>
+                <p className="text-xs text-gray-600">Tailwind CSS</p>
+              </div>
+              <div className="p-3 bg-white rounded-lg shadow-sm border border-gray-100">
+                <h4 className="font-semibold text-gray-800 mb-1 text-sm">Tools</h4>
+                <p className="text-xs text-gray-600">Vite, Git</p>
+              </div>
+              <div className="p-3 bg-white rounded-lg shadow-sm border border-gray-100">
+                <h4 className="font-semibold text-gray-800 mb-1 text-sm">Design</h4>
+                <p className="text-xs text-gray-600">Figma, UI/UX</p>
+              </div>
             </div>
           </div>
         </div>
