@@ -1,6 +1,31 @@
-import React from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 
 const About = ({ darkMode }) => {
+  const [isVisible, setIsVisible] = useState(false)
+  const aboutRef = useRef(null)
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setIsVisible(true)
+          }
+        })
+      },
+      { threshold: 0.2 }
+    )
+
+    if (aboutRef.current) {
+      observer.observe(aboutRef.current)
+    }
+
+    return () => {
+      if (aboutRef.current) {
+        observer.unobserve(aboutRef.current)
+      }
+    }
+  }, [])
   const techStacks = [
     { category: 'Frontend', techs: 'React, JavaScript, HTML/CSS', icon: '🎨' },
     { category: 'Styling', techs: 'Tailwind CSS, SCSS, Bootstrap', icon: '💅' },
@@ -9,9 +34,15 @@ const About = ({ darkMode }) => {
   ]
 
   return (
-    <section id="about" className={`py-20 transition-colors duration-300 ${darkMode ? 'bg-gray-800' : 'bg-white'}`}>
+    <section 
+      ref={aboutRef}
+      id="about" 
+      className={`py-20 transition-colors duration-300 ${darkMode ? 'bg-gray-800' : 'bg-white'}`}
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16">
+        <div className={`text-center mb-16 transform transition-all duration-1000 ${
+          isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'
+        }`}>
           <h2 className={`text-3xl md:text-4xl font-bold mb-4 transition-colors duration-300 ${
             darkMode ? 'text-white' : 'text-gray-800'
           }`}>
@@ -24,7 +55,9 @@ const About = ({ darkMode }) => {
           </p>
         </div>
         
-        <div className="grid md:grid-cols-2 gap-12 items-center">
+        <div className={`grid md:grid-cols-2 gap-12 items-center transform transition-all duration-1000 delay-300 ${
+          isVisible ? 'translate-x-0 opacity-100' : 'translate-x-10 opacity-0'
+        }`}>
           <div className="group">
             <div className="w-full h-96 bg-gradient-to-br from-blue-100 to-purple-100 rounded-lg overflow-hidden transform group-hover:scale-105 transition-transform duration-300 shadow-lg hover:shadow-2xl relative">
               {/* Profile Image */}

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 
 const ParticleBackground = ({ darkMode }) => {
   return (
@@ -24,6 +24,7 @@ const ParticleBackground = ({ darkMode }) => {
 const Hero = ({ darkMode, typedText, scrollToSection }) => {
   const [isVisible, setIsVisible] = useState(false)
   const [showName, setShowName] = useState(false)
+  const heroRef = useRef(null)
   
   useEffect(() => {
     // Trigger animations on component mount
@@ -36,8 +37,33 @@ const Hero = ({ darkMode, typedText, scrollToSection }) => {
     }
   }, [])
 
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setIsVisible(true)
+            setTimeout(() => setShowName(true), 500)
+          }
+        })
+      },
+      { threshold: 0.3 }
+    )
+
+    if (heroRef.current) {
+      observer.observe(heroRef.current)
+    }
+
+    return () => {
+      if (heroRef.current) {
+        observer.unobserve(heroRef.current)
+      }
+    }
+  }, [])
+
   return (
     <section 
+      ref={heroRef}
       id="home" 
       className={`min-h-screen flex items-center justify-center pt-16 relative overflow-hidden ${
         darkMode 

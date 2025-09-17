@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 
 const Contact = ({ darkMode }) => {
   const [formData, setFormData] = useState({
@@ -9,6 +9,31 @@ const Contact = ({ darkMode }) => {
   })
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [notification, setNotification] = useState({ show: false, message: '', type: '' })
+  const [isVisible, setIsVisible] = useState(false)
+  const contactRef = useRef(null)
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setIsVisible(true)
+          }
+        })
+      },
+      { threshold: 0.2 }
+    )
+
+    if (contactRef.current) {
+      observer.observe(contactRef.current)
+    }
+
+    return () => {
+      if (contactRef.current) {
+        observer.unobserve(contactRef.current)
+      }
+    }
+  }, [])
 
   const handleInputChange = (e) => {
     setFormData({
@@ -157,7 +182,11 @@ const Contact = ({ darkMode }) => {
   ]
 
   return (
-    <section id="contact" className={`py-20 transition-colors duration-300 ${darkMode ? 'bg-gray-900' : 'bg-gray-50'}`}>
+    <section 
+      ref={contactRef}
+      id="contact" 
+      className={`py-20 transition-colors duration-300 ${darkMode ? 'bg-gray-900' : 'bg-gray-50'}`}
+    >
       {/* Notification */}
       {notification.show && (
         <div className={`fixed top-4 right-4 z-50 p-4 rounded-lg shadow-lg max-w-md transform transition-all duration-300 ${
@@ -178,7 +207,9 @@ const Contact = ({ darkMode }) => {
       )}
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16">
+        <div className={`text-center mb-16 transform transition-all duration-1000 ${
+          isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'
+        }`}>
           <h2 className={`text-3xl md:text-4xl font-bold mb-4 transition-colors duration-300 ${
             darkMode ? 'text-white' : 'text-gray-800'
           }`}>
@@ -191,7 +222,9 @@ const Contact = ({ darkMode }) => {
           </p>
         </div>
 
-        <div className="grid md:grid-cols-2 gap-12">
+        <div className={`grid md:grid-cols-2 gap-12 transform transition-all duration-1000 delay-300 ${
+          isVisible ? 'translate-x-0 opacity-100' : 'translate-x-10 opacity-0'
+        }`}>
           {/* Contact Information */}
           <div className="space-y-8">
             <h3 className={`text-2xl font-bold mb-6 transition-colors duration-300 ${

@@ -1,7 +1,32 @@
-import React from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 
 const Footer = ({ darkMode }) => {
   const currentYear = new Date().getFullYear()
+  const [isVisible, setIsVisible] = useState(false)
+  const footerRef = useRef(null)
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setIsVisible(true)
+          }
+        })
+      },
+      { threshold: 0.1 }
+    )
+
+    if (footerRef.current) {
+      observer.observe(footerRef.current)
+    }
+
+    return () => {
+      if (footerRef.current) {
+        observer.unobserve(footerRef.current)
+      }
+    }
+  }, [])
   
   const quickLinks = [
     { name: 'Home', href: '#home' },
@@ -19,9 +44,14 @@ const Footer = ({ darkMode }) => {
   ]
 
   return (
-    <footer className={`py-12 transition-colors duration-300 ${darkMode ? 'bg-gray-900' : 'bg-gray-800'}`}>
+    <footer 
+      ref={footerRef}
+      className={`py-12 transition-colors duration-300 ${darkMode ? 'bg-gray-900' : 'bg-gray-800'}`}
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid md:grid-cols-4 gap-8">
+        <div className={`grid md:grid-cols-4 gap-8 transform transition-all duration-1000 ${
+          isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'
+        }`}>
           {/* Brand */}
           <div className="md:col-span-2">
             <h3 className="text-2xl font-bold text-white mb-4">ikram ullah</h3>

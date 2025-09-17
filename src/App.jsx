@@ -4,6 +4,7 @@ import Hero from './components/Hero'
 import About from './components/About'
 import Skills from './components/Skills'
 import Projects from './components/Projects'
+import VideoShowcase from './components/VideoShowcase'
 import Contact from './components/Contact'
 import Footer from './components/Footer'
 
@@ -58,7 +59,7 @@ const App = () => {
   // Handle scroll for active navigation and animations
   useEffect(() => {
     const handleScroll = () => {
-      const sections = ['home', 'about', 'skills', 'projects', 'contact']
+      const sections = ['home', 'about', 'skills', 'projects', 'videos', 'contact']
       const currentSection = sections.find(section => {
         const element = document.getElementById(section)
         if (element) {
@@ -112,6 +113,8 @@ const App = () => {
       <Skills darkMode={darkMode} />
       
       <Projects darkMode={darkMode} />
+      
+      <VideoShowcase darkMode={darkMode} />
       
       <Contact darkMode={darkMode} />
       
